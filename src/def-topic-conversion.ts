@@ -31,6 +31,7 @@ export interface RederlyTopic {
     partialExtend: boolean;
     topicAssessmentInfo?: DefFileTopicAssessmentInfo | null;
     questions: Array<RederlyQuestion>;
+    description: unknown;
 }
 
 export interface RederlyQuestion {
@@ -58,7 +59,8 @@ export interface RederlyQuestionAssessmentInfo {
 
 
 export interface GetTopicSettingsFromDefFileResult {
-    topicAssessmentInfo?: DefFileTopicAssessmentInfo
+    topicAssessmentInfo?: DefFileTopicAssessmentInfo;
+    description?: string;
 }
 
 
@@ -110,7 +112,8 @@ export const getTopicSettingsFromDefFile  = (parsedWebworkDef: WebWorkDef): GetT
         topicAssessmentInfo = _.omitBy(rawTopicAssessmentInfo, _.isUndefined);
     }
     return {
-        topicAssessmentInfo: topicAssessmentInfo
+        topicAssessmentInfo: topicAssessmentInfo,
+        description: parsedWebworkDef.rederlySetDescription
     };
 };
 
@@ -122,6 +125,7 @@ export const getDefObjectFromTopic  = (topic: RederlyTopic): WebWorkDef => {
     result.openDate = formatDateForWebwork(topic.startDate);
     result.dueDate = formatDateForWebwork(topic.endDate);
     result.reducedScoringDate = formatDateForWebwork(topic.deadDate);
+    result.rederlySetDescription = _.isNil(topic.description) ? '' : JSON.stringify(topic.description);
 
     // result.openDate = moment(topic.startDate).format(webworkDateFormat);
     // result.dueDate = moment(topic.endDate).format(webworkDateFormat);
