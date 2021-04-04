@@ -29,8 +29,9 @@ export interface RederlyTopic {
     endDate: Date;
     deadDate: Date;
     partialExtend: boolean;
-    topicAssessmentInfo?: DefFileTopicAssessmentInfo;
+    topicAssessmentInfo?: DefFileTopicAssessmentInfo | null;
     questions: Array<RederlyQuestion>;
+    description: unknown;
 }
 
 export interface RederlyQuestion {
@@ -41,15 +42,15 @@ export interface RederlyQuestion {
     weight: number;
     maxAttempts: number;
     // hidden: boolean;
-    courseQuestionAssessmentInfo?: RederlyQuestionAssessmentInfo;
+    courseQuestionAssessmentInfo?: RederlyQuestionAssessmentInfo | null;
 }
 
 export interface RederlyQuestionAssessmentInfo {
     // id: number;
     // courseWWTopicQuestionId: number;
     // curriculumQuestionAssessmentInfoId: number;
-    randomSeedSet?: Array<number>;
-    additionalProblemPaths?: Array<string>;
+    randomSeedSet?: Array<number> | null;
+    additionalProblemPaths?: Array<string> | null;
     // active: boolean;
 }
 /**
@@ -58,7 +59,8 @@ export interface RederlyQuestionAssessmentInfo {
 
 
 export interface GetTopicSettingsFromDefFileResult {
-    topicAssessmentInfo?: DefFileTopicAssessmentInfo
+    topicAssessmentInfo?: DefFileTopicAssessmentInfo;
+    description?: string;
 }
 
 
@@ -110,7 +112,8 @@ export const getTopicSettingsFromDefFile  = (parsedWebworkDef: WebWorkDef): GetT
         topicAssessmentInfo = _.omitBy(rawTopicAssessmentInfo, _.isUndefined);
     }
     return {
-        topicAssessmentInfo: topicAssessmentInfo
+        topicAssessmentInfo: topicAssessmentInfo,
+        description: parsedWebworkDef.rederlySetDescription
     };
 };
 
@@ -122,6 +125,7 @@ export const getDefObjectFromTopic  = (topic: RederlyTopic): WebWorkDef => {
     result.openDate = formatDateForWebwork(topic.startDate);
     result.dueDate = formatDateForWebwork(topic.endDate);
     result.reducedScoringDate = formatDateForWebwork(topic.deadDate);
+    result.rederlySetDescription = _.isNil(topic.description) ? '' : JSON.stringify(topic.description);
 
     // result.openDate = moment(topic.startDate).format(webworkDateFormat);
     // result.dueDate = moment(topic.endDate).format(webworkDateFormat);
@@ -134,7 +138,7 @@ export const getDefObjectFromTopic  = (topic: RederlyTopic): WebWorkDef => {
     result.paperHeaderFile = '';
     result.screenHeaderFile = '';
 
-    if (isExam && topic.topicAssessmentInfo !== undefined) {
+    if (isExam && topic.topicAssessmentInfo !== undefined && topic.topicAssessmentInfo !== null) {
         result.attemptsPerVersion = topic.topicAssessmentInfo.maxGradedAttemptsPerVersion?.toString();
         result.timeInterval = ((topic.topicAssessmentInfo.versionDelay ?? 0) * 60).toString();
         result.versionsPerInterval = topic.topicAssessmentInfo.maxVersions?.toString();
@@ -168,7 +172,7 @@ export const getDefObjectFromTopic  = (topic: RederlyTopic): WebWorkDef => {
         questionResult.counts_parent_grade = '0';
         questionResult.att_to_open_children = '0';
 
-        if (isExam && question.courseQuestionAssessmentInfo !== undefined) {
+        if (isExam && question.courseQuestionAssessmentInfo !== undefined && question.courseQuestionAssessmentInfo !== null) {
             questionResult.rederlyAdditionalPaths = JSON.stringify(question.courseQuestionAssessmentInfo.additionalProblemPaths);
             questionResult.rederlyRandomSeedRestrictions = JSON.stringify(question.courseQuestionAssessmentInfo.randomSeedSet);
         }
