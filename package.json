@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/rederlyhq/rederly-utils#readme",
   "dependencies": {
-    "@rederly/webwork-def-parser": "https://github.com/rederlyhq/def-parser/releases/download/v1.0.2/rederly-webwork-def-parser-1.0.2.tgz",
+    "@rederly/webwork-def-parser": "https://github.com/rederlyhq/def-parser/releases/download/v1.0.3/rederly-webwork-def-parser-1.0.3.tgz",
     "lodash": "^4.17.21",
     "moment": "^2.29.1"
   }
