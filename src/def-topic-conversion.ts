@@ -41,6 +41,7 @@ export interface RederlyQuestion {
     webworkQuestionPath: string;
     weight: number;
     maxAttempts: number;
+    optional: boolean;
     // hidden: boolean;
     courseQuestionAssessmentInfo?: RederlyQuestionAssessmentInfo | null;
 }
@@ -176,6 +177,7 @@ export const getDefObjectFromTopic  = (topic: RederlyTopic): WebWorkDef => {
             questionResult.rederlyAdditionalPaths = JSON.stringify(question.courseQuestionAssessmentInfo.additionalProblemPaths);
             questionResult.rederlyRandomSeedRestrictions = JSON.stringify(question.courseQuestionAssessmentInfo.randomSeedSet);
         }
+        questionResult.rederlyOptional = question.optional.toString();
 
         result.problems.push(questionResult);
     });
