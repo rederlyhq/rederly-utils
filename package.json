@@ -1,6 +1,6 @@
 {
   "name": "@rederly/rederly-utils",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Shared Rederly logic. This logic is specific to the Rederly platform.",
   "main": "lib/index.js",
   "scripts": {
